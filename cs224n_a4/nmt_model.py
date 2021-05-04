@@ -77,7 +77,7 @@ class NMT(nn.Module):
         ###     Dropout Layer:
         ###         https://pytorch.org/docs/stable/nn.html#torch.nn.Dropout
 
-        self.encoder = torh.nn.LSTM(input_size=embed_size, hidden_size=hidden_size, bias=True, bidirectional=True)
+        self.encoder = torch.nn.LSTM(input_size=embed_size, hidden_size=hidden_size, bias=True, bidirectional=True)
         self.decoder = torch.nn.LSTMCell(input_size=embed_size, hidden_size=hidden_size, bias=True)
         self.h_projection = torch.nn.Linear(2 * hidden_size, hidden_size, bias=False)
         self.c_projection = torch.nn.Linear(2 * hidden_size, hidden_size, bias=False)
@@ -177,7 +177,8 @@ class NMT(nn.Module):
 
         X = self.model_embeddings.source(source_padded)
         X = torch.nn.utils.pack_padded_sequence(X, source_lengths)
-        # enc_hiddens = torch.zeros([])
+        hiddens = []
+        # for 
 
         ### END YOUR CODE
 
