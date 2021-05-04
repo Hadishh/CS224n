@@ -176,7 +176,7 @@ class NMT(nn.Module):
         X = self.model_embeddings.source(source_padded)
         X = nn.utils.rnn.pack_padded_sequence(X, source_lengths)
         enc_hiddens = self.encoder(X)
-        enc_hiddens = nn.utils.pad_packed_sequence(enc_hiddens)
+        enc_hiddens = nn.utils.rnn.pad_packed_sequence(enc_hiddens)
         enc_hiddens = (enc_hiddens[0].permute(1, 0, 2), enc_hiddens[1].permute(1, 0, 2))
         dec_h0 = self.h_projection(torch.cat(enc_hiddens[0][0, :, 0: self.hidden_size], enc_hiddens[0][-1, :, self.hidden_size: ]))
         dec_c0 = self.c_projection(torch.cat(enc_hiddens[1][0, :, 0: self.hidden_size], enc_hiddens[1][-1, :, self.hidden_size: ]))
