@@ -135,7 +135,7 @@ elif args.function == 'finetune':
             final_tokens=200*len(pretrain_dataset)*block_size,
             num_workers=4)
     trainer.Trainer(model_, finetune_dataset, None, train_config).train()
-    model_.save(args.writing_params_path)
+    torch.save(model_.state_dict(), args.writing_params_path)
     # raise NotImplementedError
 elif args.function == 'evaluate':
     assert args.outputs_path is not None
