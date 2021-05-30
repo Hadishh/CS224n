@@ -250,12 +250,9 @@ class NMT(nn.Module):
 
         Y = self.model_embeddings.target(target_padded)
         enc_hidden_proj = self.att_projection(enc_hiddens)
-        for (t, Y_t)  in enumerate(torch.split(Y, 1)):
-            Y_t = Y_t[0]
-            Ybar_t = torch.cat((Y_t, o_prev), dim=1)
-            ht, ct = self.decoder(Ybar_t, dec_state)
-            et, ot, dec_state = self.step(Ybar_t, dec_state, enc_hiddens, enc_hidden_proj, enc_masks)
-            dec_state = (ht, ct)
+        for i  in range(Y.size(0)):
+            Ybar_t = torch.cat((Y[i], o_prev), dim=1)
+            dec_state, ot, _ = self.step(Ybar_t, dec_state, enc_hiddens, enc_hidden_proj, enc_masks)
             combined_outputs.append(ot)
             o_prev = ot
         combined_outputs = torch.stack(combined_outputs, dim=0)
@@ -318,8 +315,7 @@ class NMT(nn.Module):
 
         dec_state = self.decoder(Ybar_t, dec_state)
         dec_hidden, dec_cell = dec_state
-        product = torch.unsqueeze(dec_hidden, 1) * enc_hiddens_proj
-        e_t = torch.sum(product, dim=2)
+        e_t = torch.bmm(enc_hiddens_proj, dec_hidden.unsqueeze(-1)).squeeze(-1)
 
         ### END YOUR CODE
 
@@ -356,16 +352,14 @@ class NMT(nn.Module):
         ###         https://pytorch.org/docs/stable/torch.html#torch.tanh
 
         alpha_t = F.softmax(e_t, dim=1)
-        a_t = torch.sum(torch.unsqueeze(alpha_t, -1) * enc_hiddens, dim=1)
+        a_t = torch.bmm(alpha_t.unsqueeze(1), enc_hiddens).squeeze(1)
         U_t = torch.cat((a_t, dec_hidden), 1)
 
         V_t = self.combined_output_projection(U_t)
         O_t = self.dropout(torch.tanh(V_t))
 
         ### END YOUR CODE
-
-        combined_output = O_t
-        return dec_state, combined_output, e_t
+        return dec_state, O_t, e_t
 
     def generate_sent_masks(self, enc_hiddens: torch.Tensor, source_lengths: List[int]) -> torch.Tensor:
         """ Generate sentence masks for encoder hidden states.
