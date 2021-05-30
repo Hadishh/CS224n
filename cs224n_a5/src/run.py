@@ -114,7 +114,7 @@ elif args.function == 'finetune':
     #         final_tokens=200*len(pretrain_dataset)*block_size
     #         num_workers=4
     finetune_text = open(args.finetune_corpus_path).read()
-    finetune_dataset = dataset.CharCorruptionDataset(finetune_text, block_size)
+    finetune_dataset = dataset.NameDataset(pretrain_dataset, finetune_text)
     if args.reading_params_path is not None:
         model_.load_state_dict(torch.load(args.reading_params_path))
         train_config = trainer.TrainerConfig(
