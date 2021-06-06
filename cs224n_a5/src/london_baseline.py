@@ -9,4 +9,4 @@ with open("birth_dev.tsv") as tsv:
     total_length = len(lines)
 
 accuracy = utils.evaluate_places("birth_dev.tsv", ["London"] * total_length)
-print(f"Accuray is : {accuracy}")
+print(f"Correct {accuracy[1]} of {accuracy[0]}, Accuracy: {accuracy[1] / accuracy[0] * 100}%")
