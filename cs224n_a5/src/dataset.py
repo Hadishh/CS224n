@@ -173,7 +173,7 @@ class CharCorruptionDataset(Dataset):
         start_idx = random.randrange(0, len(document) // 2)
         length = len(document) // 4
         threshold = length // 16
-        stop_idx = random.randrange(length - threshold, length + threshold)
+        stop_idx = random.randrange(length - threshold, length + threshold + 1)
         prefix = document[0:start_idx]
         masked_document = document[start_idx: stop_idx]
         suffix = document[stop_idx:]
@@ -183,8 +183,6 @@ class CharCorruptionDataset(Dataset):
         y = torch.tensor([self.stoi[c] for c in masked_string[1:]], dtype=torch.long)
         return x, y
         # TODO [part e]: see spec above
-
-        raise NotImplementedError
 
 """
 Code under here is strictly for your debugging purposes; feel free to modify
