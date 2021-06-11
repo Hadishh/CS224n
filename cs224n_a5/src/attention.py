@@ -96,6 +96,8 @@ class SynthesizerAttention(nn.Module):
         v = self.value(x).view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
         # synthesizer self-attention; Self-attend: (B, nh, T, hs) x (hs, T) -> (B, nh, T, T)
         att = (a @ self.w2) + self.b2
+        print(att.size())
+        print(self.mask.size())
         att = att.masked_fill(self.mask[:,:,:T,:T] == 0, -1e10) # todo: just use float('-inf') instead?
         att = F.softmax(att, dim=-1)
         att = self.attn_drop(att)
