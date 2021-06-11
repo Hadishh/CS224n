@@ -164,8 +164,8 @@ elif args.function == 'evaluate':
         for line in tqdm(open(args.eval_corpus_path)):
             x = line.split('\t')[0]
             x = x + '⁇'
-            print(model_.get_block_size())
             x = torch.tensor([pretrain_dataset.stoi[s] for s in x], dtype=torch.long)[None,...].to(device)
+            print(x.shape)
             pred = utils.sample(model_, x, 32, sample=False)[0]
             completion = ''.join([pretrain_dataset.itos[int(i)] for i in pred])
             pred = completion.split('⁇')[1]
