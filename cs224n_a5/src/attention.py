@@ -41,9 +41,6 @@ class CausalSelfAttention(nn.Module):
         # causal self-attention; Self-attend: (B, nh, T, hs) x (B, nh, hs, T) -> (B, nh, T, T)
         att = (q @ k.transpose(-2, -1)) * (1.0 / math.sqrt(k.size(-1)))
         att = att.masked_fill(self.mask[:,:,:T,:T] == 0, -1e10) # todo: just use float('-inf') instead?
-        print(att.size())
-        print(self.mask.size())
-        print(T)
         att = F.softmax(att, dim=-1)
         att = self.attn_drop(att)
         y = att @ v # (B, nh, T, T) x (B, nh, T, hs) -> (B, nh, T, hs)
@@ -97,10 +94,7 @@ class SynthesizerAttention(nn.Module):
         a = self.w1(x).view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
         v = self.value(x).view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)
         # synthesizer self-attention; Self-attend: (B, nh, T, hs) x (hs, T) -> (B, nh, T, T)
-        att = (a @ self.w2) + self.b2
-        print(att.size())
-        print(self.mask.size())
-        print(T)
+        att = (a[:, :, T, :] @ self.w2[:,:T]) + self.b2[:T]
         att = att.masked_fill(self.mask[:,:,:T,:T] == 0, -1e10) # todo: just use float('-inf') instead?
         att = F.softmax(att, dim=-1)
         att = self.attn_drop(att)
