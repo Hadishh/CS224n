@@ -59,7 +59,10 @@ if args.variant == 'vanilla':
     model_ = model.GPT(mconf)
     model_.to(device)
 elif args.variant == 'synthesizer':
-    pass # TODO [part g]: Make some other model here
+    # TODO [part g]: Make some other model here
+    mconf.synthesizer = True
+    model_ = model.GPT(mconf)
+    model_.to(device)
 
 # From here on, your code should be identical independent of which
 # variant (vanilla or synthesizer) has been chosen.
@@ -93,7 +96,7 @@ if args.function == 'pretrain':
     trainer.Trainer(model_, pretrain_dataset, None, train_config).train()
     torch.save(model_.state_dict(), args.writing_params_path)
     # TODO [part f]:
-    raise NotImplementedError
+    # raise NotImplementedError
 elif args.function == 'finetune':
     assert args.writing_params_path is not None
     assert args.finetune_corpus_path is not None
