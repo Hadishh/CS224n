@@ -171,7 +171,7 @@ class CharCorruptionDataset(Dataset):
         truncated_idx = random.randint(4, self.block_size * 7 // 8)
         original_doc = self.data[idx]
         document = original_doc[:truncated_idx]
-        start_idx = random.randrange(0, len(document) // 2)
+        start_idx = random.randrange(0, len(document) // 2 + 1)
         length = len(document) // 4
         threshold = length // 4
         stop_idx = start_idx + random.randrange(length - threshold, length + threshold + 1)
