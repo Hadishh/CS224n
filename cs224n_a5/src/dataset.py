@@ -167,6 +167,7 @@ class CharCorruptionDataset(Dataset):
         return len(self.data)
 
     def __getitem__(self, idx):
+        # [part e]: see spec above
         truncated_idx = random.randint(4, self.block_size * 7 // 8)
         original_doc = self.data[idx]
         document = original_doc[:truncated_idx]
@@ -183,7 +184,6 @@ class CharCorruptionDataset(Dataset):
         x = torch.tensor([self.stoi[c] for c in masked_string[:-1]], dtype=torch.long)
         y = torch.tensor([self.stoi[c] for c in masked_string[1:]], dtype=torch.long)
         return x, y
-        # TODO [part e]: see spec above
 
 """
 Code under here is strictly for your debugging purposes; feel free to modify
