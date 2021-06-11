@@ -172,7 +172,7 @@ class CharCorruptionDataset(Dataset):
         document = original_doc[:truncated_idx]
         start_idx = random.randrange(0, len(document) // 2)
         length = len(document) // 4
-        threshold = length // 16
+        threshold = length // 4
         stop_idx = random.randrange(length - threshold, length + threshold + 1)
         prefix = document[0:start_idx]
         masked_document = document[start_idx: stop_idx]
