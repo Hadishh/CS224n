@@ -2,7 +2,7 @@
 
 This repository contains my solutions to the assignments of the course 
 of "Natural Language Processing with Deep Learning" (CS224n) taught by Christopher Manning.
-at the UC Berkeley. I used the material from 
+at Stanford University. I used the material from 
 [Winter 2021](http://web.stanford.edu/class/cs224n).
 <br /> <br />Instructor: [Sauleh Etemadi](https://sauleh.ir)
 
